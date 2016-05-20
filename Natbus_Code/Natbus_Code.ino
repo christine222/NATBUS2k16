@@ -1,9 +1,9 @@
-#define rightSensor 14 //outside one 
+/*
+  UCLA IEEE OPS 2015-16 Capstone Project
+  Christine Chen, Allison Doami, and Charlotte McGinn
+*/
+#define rightSensor 14  //outside one 
 #define leftSensor 15   //inside one
-
-//helper function for speed (can assign turning)
-
-//implement something that makes the car keep on turning until it sees the line 
 
 #define rightWheelInput1 9
 #define rightWheelInput2 10
@@ -11,7 +11,7 @@
 #define leftWheelInput3 3
 #define leftWheelInput4 4
 
-#define enablePinLeft 22 //22 and 23 are our EN1 and EN2
+#define enablePinLeft 22    //22 and 23 are our EN1 and EN2
 #define enablePinRight 23
 
 #define LED 13
