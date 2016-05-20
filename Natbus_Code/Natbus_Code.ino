@@ -3,7 +3,6 @@
   Christine Chen, Allison Doami, and Charlotte McGinn
 */
 
-//black 26, red 23
 #define rightSensor 14  //outside one 
 #define leftSensor 15   //inside one
 
