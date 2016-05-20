@@ -11,38 +11,39 @@
 #define leftWheelInput3 3
 #define leftWheelInput4 4
 
-#define enablePinLeft 22
+#define enablePinLeft 22 //22 and 23 are our EN1 and EN2
 #define enablePinRight 23
 
 #define LED 13
-//22 and 23 are our EN1 and EN2
 
- int sensorRight = 0;
+
+ int sensorRight = 0;    //right and left sensor readings
  int sensorLeft = 0;
 
- int rightSpeed = 0;
+ int rightSpeed = 0;     //right and left motor speeds
  int leftSpeed = 0;
 
- int rightError = 0;
+ int rightError = 0;     //right and left motor error
  int leftError = 0;
 
- int rightBaseline = 0;
+ int rightBaseline = 0;  //right and left motor baseline
  int leftBaseline = 0;
 
- double KpRight = 0.3;
+ double KpRight = 0.3;   //right and left sensor proportional constant
  double KpLeft = 0.3;
- int leftTolerance = 50;
+
+ int leftTolerance = 50; //right and left sensor tolerance
  int rightTolerance = 50;
 
- int maxSpeed = 100; //maxSpeed = 70, KpRight = 0.3, KpLeft = 0.5
-                      //maxSpeed = 100; KpRight = 0.3, KpLeft = 0.3
+ 
 
- int delaytime = 100;
+ int maxSpeed = 100;     //maxSpeed = 70, KpRight = 0.3, KpLeft = 0.5
+                         //maxSpeed = 100; KpRight = 0.3, KpLeft = 0.3
+
+ int delaytime = 100;    //time between control loop iterations
 
 void setup() {
   Serial.begin(9600);
-
-  
 
   pinMode(rightSensor, INPUT);
   pinMode(leftSensor, INPUT);
@@ -56,6 +57,7 @@ void setup() {
   pinMode(enablePinRight, OUTPUT);
   pinMode(enablePinLeft, OUTPUT);
 
+  // sample and find average value for right and left sensors
   for(int i = 0; i < 200; i++){
      rightBaseline += analogRead(rightSensor);
      leftBaseline += analogRead(leftSensor);
@@ -63,8 +65,6 @@ void setup() {
 
   rightBaseline /= 200;
   leftBaseline /= 200;
-
-
 
   pinMode(LED, OUTPUT);
 }
@@ -107,7 +107,7 @@ void loop() {
 
 
 
-  if(rightError < 0){
+  if(rightError < 0){ //absolute value of error
     rightError *= -1;
   }
   if(leftError < 0){
