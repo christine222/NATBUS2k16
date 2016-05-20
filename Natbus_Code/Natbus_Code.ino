@@ -29,8 +29,15 @@
  int rightBaseline = 0;  //right and left motor baseline
  int leftBaseline = 0;
 
- double KpRight = 0.3;   //right and left sensor proportional constant
- double KpLeft = 0.3;
+ double kp = 0;          //proportional constant
+ double kd = 0;          //derivative constant
+ double ki = 0;          //integral constant
+
+ int error = 0;          //error (rightError - leftError)
+ int dError = 0;         //derivative error
+ int pError = 0;         //previous error
+ int integral = 0;       //integral value
+ int speedChange = 0;
 
  int leftTolerance = 50; //right and left sensor tolerance
  int rightTolerance = 50;
@@ -70,91 +77,25 @@ void setup() {
 }
 
 
-/*void pedalToTheMetal(int side, int error){
-
-  rightSpeed = map(error,0,rightBaseline,0, rightBaseline);
-  leftSpeed = map(
-  
-  if(side == 0){ //right side
-    
-  }
-
-  if(side == 1){ //left side
-    
-  }
-}*/
-
 void loop() {
-
-/*
-  Serial.print("RightBaseline: ");
-  Serial.println(rightBaseline);
-  Serial.print("LeftBaseline: ");
-  Serial.println(leftBaseline);
-  Serial.println();
- */
-
-  rightSpeed = maxSpeed;
-  leftSpeed = maxSpeed;
   
-  sensorRight = analogRead(rightSensor);
-  sensorLeft = analogRead(leftSensor);
+  sensorRight = analogRead(rightSensor);     //read right sensor value
+  sensorLeft = analogRead(leftSensor);       //read left sensor value
 
-  rightError = sensorRight - rightBaseline;
-  leftError = sensorLeft - leftBaseline;
+  rightError = sensorRight - rightBaseline;  //calculate right sensor error
+  leftError = sensorLeft - leftBaseline;     //calculate left sensor error
 
+  error = rightError - leftError;            //calculate error between sensors
+  dError = error - pError;                   //calculate the derivative error
+  integral += error;                         //update the integral
+  pError = error;                            //update the previous error value
+  
+  rightSpeed = maxSpeed;                     //set the speed of right motor
+  leftSpeed = maxSpeed;                      //set the speed of left motor
 
-
-
-
-  if(rightError < 0){ //absolute value of error
-    rightError *= -1;
-  }
-  if(leftError < 0){
-    leftError *= -1;
-  }
-
-  //rightError *=(255/1023);
-  //leftError *=(255/1023);
-
-
-
-  if(rightError > rightTolerance){
-    rightSpeed -= (KpRight*rightError);
-    leftSpeed += (KpLeft*rightError);
-  }
-  else if(leftError > leftTolerance){
-    rightSpeed += (KpRight*leftError);
-    leftSpeed -= (KpLeft*leftError);
-  }
-  else{
-    rightSpeed= maxSpeed;
-    leftSpeed= maxSpeed;
-  }
-
-  //don't want it to be negative
-  if (rightSpeed < 0){
-    rightSpeed  = 0;
-  }
-  if (leftSpeed < 0){
-    leftSpeed = 0;
-  }
-
-  //don't want it to exceed 255
-  if (rightSpeed >maxSpeed){
-    rightSpeed = maxSpeed;
-  }
-  if (leftSpeed >maxSpeed){
-    leftSpeed = maxSpeed;
-  }
-
-/*  Serial.print("Right: ");
-  Serial.println(sensorRight);
-  Serial.print("Left: ");
-  Serial.println(sensorLeft);
-  Serial.println();
-
- */
+  speedChange = (kp*error) + (kd*dError) + (ki*integral); //use PID to calculate the speed change
+  rightSpeed -= speedChange;                              //update the right speed
+  leftSpeed += speedchange;                               //update the left speed
 
   Serial.print("rightError: ");
   Serial.println(rightError);
@@ -170,25 +111,17 @@ void loop() {
   digitalWrite(leftWheelInput3, HIGH);
   digitalWrite(leftWheelInput4, LOW);
 
+  //update the speed of the right motor to our calculated speed
+  analogWrite(enablePinRight, rightSpeed);
+  Serial.print("Right Wheel: ");
+  Serial.println(rightSpeed);
 
-  /*if(sensorRight > 700){
-
-    rightSpeed = 50;
-    
-  }
-
-  if(sensorLeft > 700){,
-    leftSpeed = 50;
-  }
-*/
-analogWrite(enablePinRight, rightSpeed);
-Serial.print("Right Wheel: ");
-Serial.println(rightSpeed);
-
-analogWrite(enablePinLeft, leftSpeed);
-Serial.print("Left Wheel: ");
-Serial.println(leftSpeed);
-Serial.println();
+  //update the speed of the left motor to our calculated speed
+  analogWrite(enablePinLeft, leftSpeed);
+  Serial.print("Left Wheel: ");
+  Serial.println(leftSpeed);
+  Serial.println();
+  
   digitalWrite(LED, HIGH); 
 
   delay(delaytime);
