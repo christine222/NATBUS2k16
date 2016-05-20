@@ -2,6 +2,8 @@
   UCLA IEEE OPS 2015-16 Capstone Project
   Christine Chen, Allison Doami, and Charlotte McGinn
 */
+
+//black 26, red 23
 #define rightSensor 14  //outside one 
 #define leftSensor 15   //inside one
 
@@ -29,8 +31,8 @@
  int rightBaseline = 0;  //right and left motor baseline
  int leftBaseline = 0;
 
- double kp = 0;          //proportional constant
- double kd = 0;          //derivative constant
+ double kp = 9;          //proportional constant
+ double kd = 2;          //derivative constant
  double ki = 0;          //integral constant
 
  int error = 0;          //error (rightError - leftError)
@@ -38,16 +40,11 @@
  int pError = 0;         //previous error
  int integral = 0;       //integral value
  int speedChange = 0;
-
- int leftTolerance = 50; //right and left sensor tolerance
- int rightTolerance = 50;
-
  
-
- int maxSpeed = 100;     //maxSpeed = 70, KpRight = 0.3, KpLeft = 0.5
+ int maxSpeed = 255;     //maxSpeed = 70, KpRight = 0.3, KpLeft = 0.5
                          //maxSpeed = 100; KpRight = 0.3, KpLeft = 0.3
 
- int delaytime = 100;    //time between control loop iterations
+ int delaytime = 0;    //time between control loop iterations
 
 void setup() {
   Serial.begin(9600);
@@ -64,12 +61,16 @@ void setup() {
   pinMode(enablePinRight, OUTPUT);
   pinMode(enablePinLeft, OUTPUT);
 
+  digitalWrite(LED, HIGH);
+  
   // sample and find average value for right and left sensors
   for(int i = 0; i < 200; i++){
      rightBaseline += analogRead(rightSensor);
      leftBaseline += analogRead(leftSensor);
   }
 
+  digitalWrite(LED, LOW);
+  
   rightBaseline /= 200;
   leftBaseline /= 200;
 
@@ -95,7 +96,7 @@ void loop() {
 
   speedChange = (kp*error) + (kd*dError) + (ki*integral); //use PID to calculate the speed change
   rightSpeed -= speedChange;                              //update the right speed
-  leftSpeed += speedchange;                               //update the left speed
+  leftSpeed += speedChange;                               //update the left speed
 
   Serial.print("rightError: ");
   Serial.println(rightError);
