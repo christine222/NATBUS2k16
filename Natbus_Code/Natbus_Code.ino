@@ -40,8 +40,7 @@
  int integral = 0;       //integral value
  int speedChange = 0;
  
- int maxSpeed = 255;     //maxSpeed = 70, KpRight = 0.3, KpLeft = 0.5
-                         //maxSpeed = 100; KpRight = 0.3, KpLeft = 0.3
+ int maxSpeed = 255;
 
  int delaytime = 0;    //time between control loop iterations
 
