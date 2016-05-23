@@ -30,8 +30,8 @@
  int rightBaseline = 0;  //right and left motor baseline
  int leftBaseline = 0;
 
- double kp = 9;          //proportional constant
- double kd = 2;          //derivative constant
+ double kp = 6;          //proportional constant
+ double kd = 0.6;          //derivative constant
  double ki = 0;          //integral constant
 
  int error = 0;          //error (rightError - leftError)
