@@ -30,8 +30,8 @@
  int rightBaseline = 0;  //right and left motor baseline
  int leftBaseline = 0;
 
- double kp = 6;          //proportional constant
- double kd = 2;          //derivative constant
+ double kp = 0.8;          //proportional constant .8
+ double kd = 0.1;          //derivative constant .1
  double ki = 0;          //integral constant
 
  int error = 0;          //error (rightError - leftError)
@@ -91,12 +91,6 @@ void loop() {
   
   rightSpeed = maxSpeed;                     //set the speed of right motor
   leftSpeed = maxSpeed;                      //set the speed of left motor
-
-  if(dError > 30){
-    kd = 5; //if dError is increasing too fast, make derivative higher
-  }else{
-    kd = 2;
-  }
 
   speedChange = (kp*error) + (kd*dError) + (ki*integral); //use PID to calculate the speed change
   rightSpeed -= speedChange;                              //update the right speed
